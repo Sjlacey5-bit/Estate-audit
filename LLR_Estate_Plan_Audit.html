@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="LLR Audit">
+<title>LLR Estate Plan Audit</title>
+<style>
+:root {
+  --navy: #1a2e4a;
+  --navy-light: #243d61;
+  --gold: #b8943f;
+  --gold-light: #d4af6a;
+  --cream: #faf8f4;
+  --cream-dark: #f0ede6;
+  --border: #d8d3c8;
+  --border-strong: #b8b0a0;
+  --text: #1a1a1a;
+  --text-mid: #4a4540;
+  --text-muted: #7a746c;
+  --blue-tint: #eef3fa;
+  --blue-mid: #185FA5;
+  --blue-dark: #0c3d6b;
+  --green-tint: #edf5ee;
+  --green-mid: #2e7d32;
+  --amber-tint: #fef8ee;
+  --amber-mid: #b8943f;
+  --red-tint: #fdf0f0;
+  --red-mid: #c0392b;
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; }
+body {
+  font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* HEADER */
+.app-header {
+  background: var(--navy);
+  padding: 16px 20px 14px;
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.app-header-left { display: flex; flex-direction: column; }
+.firm-name { color: var(--gold-light); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
+.app-title { color: #fff; font-size: 18px; font-weight: 600; margin-top: 2px; }
+.header-btns { display: flex; gap: 8px; }
+.hbtn {
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+  color: #fff; font-size: 12px; padding: 7px 12px; border-radius: var(--radius);
+  cursor: pointer; font-weight: 500; white-space: nowrap;
+}
+.hbtn:active { background: rgba(255,255,255,0.2); }
+.hbtn.gold { background: var(--gold); border-color: var(--gold); color: #fff; }
+.hbtn.gold:active { background: var(--gold-light); }
+
+/* NAV TABS */
+.tab-nav {
+  background: var(--navy-light);
+  display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; border-bottom: 2px solid var(--gold);
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0; padding: 10px 16px; font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.6); border: none; background: none; cursor: pointer;
+  letter-spacing: 0.04em; white-space: nowrap; border-bottom: 2px solid transparent;
+  margin-bottom: -2px; transition: color 0.15s;
+}
+.tab-btn.active { color: var(--gold-light); border-bottom-color: var(--gold-light); }
+
+/* SECTIONS */
+.tab-content { display: none; padding: 20px 16px; }
+.tab-content.active { display: block; }
+
+.section-title {
+  font-size: 13px; font-weight: 600; color: var(--navy);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title svg { width: 16px; height: 16px; opacity: 0.7; }
+
+/* FORM ELEMENTS */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 500; }
+.field input[type="text"],
+.field input[type="date"],
+.field input[type="email"],
+.field select,
+.field textarea {
+  width: 100%; padding: 10px 12px; font-size: 15px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: #fff; color: var(--text); font-family: inherit;
+  -webkit-appearance: none; appearance: none;
+}
+.field textarea { min-height: 72px; resize: vertical; line-height: 1.5; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--blue-mid); box-shadow: 0 0 0 3px rgba(24,95,165,0.1);
+}
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+/* FIDUCIARY BLOCKS */
+.fiduciary-block {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px; margin-bottom: 12px;
+}
+.fiduciary-title {
+  font-size: 12px; font-weight: 600; color: var(--navy);
+  text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.rank-badge {
+  background: var(--navy); color: var(--gold-light);
+  font-size: 10px; padding: 2px 7px; border-radius: 99px; font-weight: 600;
+}
+
+/* CHECK ITEMS */
+.check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 10px 10px; border: 1px solid var(--border);
+  border-radius: var(--radius); cursor: pointer; background: #fff;
+  transition: border-color 0.15s, background 0.15s; user-select: none;
+}
+.check-item.checked { border-color: var(--blue-mid); background: var(--blue-tint); }
+.check-box {
+  width: 18px; height: 18px; min-width: 18px; border: 1.5px solid var(--border-strong);
+  border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-top: 1px;
+  background: #fff;
+}
+.check-item.checked .check-box { background: var(--blue-mid); border-color: var(--blue-mid); }
+.check-tick { display: none; width: 10px; height: 10px; }
+.check-item.checked .check-tick { display: block; }
+.check-label { font-size: 13px; color: var(--text); line-height: 1.4; }
+.check-item.checked .check-label { color: var(--blue-dark); }
+.check-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; display: block; }
+.check-item.checked .check-sub { color: var(--blue-mid); }
+
+/* RADIO PILLS */
+.pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.pill {
+  padding: 7px 14px; border: 1px solid var(--border);
+  border-radius: 99px; font-size: 13px; cursor: pointer;
+  color: var(--text-mid); background: #fff; user-select: none;
+  transition: all 0.15s;
+}
+.pill.selected { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+/* GOAL CARDS */
+.goal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.goal-card {
+  padding: 11px 12px; border: 1px solid var(--border);
+  border-radius: var(--radius); cursor: pointer; background: #fff;
+  transition: all 0.15s; user-select: none;
+}
+.goal-card.p1 { border-color: var(--blue-mid); background: var(--blue-tint); }
+.goal-card.p2 { border-color: var(--green-mid); background: var(--green-tint); }
+.goal-card.p3 { border-color: var(--amber-mid); background: var(--amber-tint); }
+.goal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3px; }
+.goal-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.goal-card.p1 .goal-name { color: var(--blue-dark); }
+.goal-card.p2 .goal-name { color: var(--green-mid); }
+.goal-card.p3 .goal-name { color: #7a5500; }
+.pri-badge { font-size: 10px; padding: 2px 7px; border-radius: 99px; display: none; font-weight: 600; }
+.goal-card.p1 .pri-badge { display: inline; background: var(--blue-mid); color: #fff; }
+.goal-card.p2 .pri-badge { display: inline; background: var(--green-mid); color: #fff; }
+.goal-card.p3 .pri-badge { display: inline; background: var(--amber-mid); color: #fff; }
+.goal-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+.goal-card.p1 .goal-desc { color: var(--blue-mid); }
+.goal-card.p2 .goal-desc { color: var(--green-mid); }
+.goal-card.p3 .goal-desc { color: #b8943f; }
+
+/* SCORECARD */
+.score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+.score-card {
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 12px 10px; text-align: center;
+}
+.score-num { font-size: 24px; font-weight: 700; color: var(--navy); }
+.score-lbl { font-size: 10px; color: var(--text-muted); margin-top: 3px; line-height: 1.3; }
+
+/* GAP FLAGS */
+.gap-list { display: flex; flex-direction: column; gap: 8px; }
+.gap-item {
+  padding: 10px 12px; border-radius: var(--radius);
+  font-size: 13px; line-height: 1.4; display: flex; align-items: flex-start; gap: 8px;
+}
+.gap-item.danger { background: var(--red-tint); color: #7a1c1c; border-left: 3px solid var(--red-mid); }
+.gap-item.warn { background: var(--amber-tint); color: #7a5500; border-left: 3px solid var(--amber-mid); }
+.gap-item.ok { background: var(--green-tint); color: #1a4d1e; border-left: 3px solid var(--green-mid); }
+
+/* AI SUMMARY AREA */
+.ai-box {
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 16px; margin-top: 16px; min-height: 120px;
+}
+.ai-box.loading { opacity: 0.6; }
+.ai-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+.ai-content { font-size: 14px; line-height: 1.7; color: var(--text); white-space: pre-wrap; }
+.ai-placeholder { font-size: 14px; color: var(--text-muted); font-style: italic; }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px 20px; font-size: 14px; font-weight: 600; border-radius: var(--radius);
+  cursor: pointer; border: none; font-family: inherit; transition: all 0.15s;
+  -webkit-appearance: none;
+}
+.btn-primary { background: var(--navy); color: #fff; width: 100%; margin-bottom: 10px; }
+.btn-primary:active { background: var(--navy-light); }
+.btn-gold { background: var(--gold); color: #fff; width: 100%; margin-bottom: 10px; }
+.btn-gold:active { background: var(--gold-light); }
+.btn-outline { background: #fff; color: var(--navy); border: 1.5px solid var(--navy); width: 100%; margin-bottom: 10px; }
+.btn-outline:active { background: var(--cream-dark); }
+.btn-danger { background: #fff; color: var(--red-mid); border: 1.5px solid var(--red-mid); width: 100%; }
+
+/* SPINNER */
+.spinner { display: none; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn.loading .spinner { display: inline-block; }
+.btn.loading .btn-text { opacity: 0.7; }
+
+/* DISTRIBUTION SECTION */
+.dist-block {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px; margin-bottom: 12px;
+}
+.dist-title { font-size: 12px; font-weight: 600; color: var(--navy); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+
+/* BEQUEST ROWS */
+.bequest-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+.bequest-row input { flex: 1; }
+.bequest-row .rm-btn {
+  background: none; border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--text-muted); font-size: 18px; line-height: 1; padding: 8px 10px;
+  cursor: pointer; flex-shrink: 0;
+}
+.add-link {
+  font-size: 13px; color: var(--blue-mid); cursor: pointer; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;
+}
+
+/* EMAIL MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+  display: none; align-items: flex-end; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--cream); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 20px 16px 40px; width: 100%; max-width: 680px;
+}
+.modal-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+.modal-close-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.modal-x { background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; padding: 4px; }
+
+/* DIVIDER */
+hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* BOTTOM PADDING */
+.bottom-actions { padding: 0 16px 20px; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-header-left">
+    <span class="firm-name">Lacey Rezanka PLLC</span>
+    <span class="app-title">Estate Plan Audit</span>
+  </div>
+  <div class="header-btns">
+    <button class="hbtn" onclick="clearAll()">Clear</button>
+    <button class="hbtn gold" onclick="openEmailModal()">Send to Paralegal</button>
+  </div>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('client', this)">Client Info</button>
+  <button class="tab-btn" onclick="showTab('documents', this)">Documents</button>
+  <button class="tab-btn" onclick="showTab('fiduciaries', this)">Fiduciaries</button>
+  <button class="tab-btn" onclick="showTab('distribution', this)">Distribution</button>
+  <button class="tab-btn" onclick="showTab('goals', this)">Goals</button>
+  <button class="tab-btn" onclick="showTab('notes', this)">Notes</button>
+  <button class="tab-btn" onclick="showTab('summary', this)">Summary</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ CLIENT INFO -->
+<div id="tab-client" class="tab-content active">
+  <div class="section-title">Client Information</div>
+  <div class="row-2">
+    <div class="field"><label>Client 1 — full legal name</label><input type="text" id="c-name1" placeholder="First Middle Last"></div>
+    <div class="field"><label>Client 2 — spouse / partner</label><input type="text" id="c-name2" placeholder="If applicable"></div>
+  </div>
+  <div class="row-2">
+    <div class="field"><label>Date of consultation</label><input type="date" id="c-date"></div>
+    <div class="field"><label>Referred by</label><input type="text" id="c-referral" placeholder="Advisor, client, etc."></div>
+  </div>
+  <div class="row-2">
+    <div class="field">
+      <label>Estimated estate value</label>
+      <select id="c-estate">
+        <option value="">Select range</option>
+        <option>Under $500K</option>
+        <option>$500K – $1M</option>
+        <option>$1M – $2M</option>
+        <option>$2M – $5M</option>
+        <option>$5M – $10M</option>
+        <option>$10M+</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Marital status</label>
+      <select id="c-marital">
+        <option value="">Select</option>
+        <option>Single</option>
+        <option>Married — first marriage</option>
+        <option>Married — blended family</option>
+        <option>Divorced</option>
+        <option>Widowed</option>
+        <option>Domestic partnership</option>
+      </select>
+    </div>
+  </div>
+  <div class="field"><label>Address / county</label><input type="text" id="c-address" placeholder="City, FL  ZIP"></div>
+  <div class="field"><label>Dependents / beneficiaries (names, ages, relationships)</label>
+    <textarea id="c-dependents" placeholder="e.g. John Jr., 24, son — Sarah, 19, daughter (special needs) — Emma, 12, granddaughter"></textarea>
+  </div>
+  <div class="field"><label>Business interests</label>
+    <textarea id="c-business" placeholder="e.g. 100% member, Lacey Holdings LLC (FL); 50% shareholder, XYZ Corp"></textarea>
+  </div>
+  <div class="field"><label>Out-of-state or foreign property</label>
+    <textarea id="c-outofstate" placeholder="e.g. Vacation home in NC — ancillary probate may apply"></textarea>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ DOCUMENTS -->
+<div id="tab-documents" class="tab-content">
+  <div class="section-title">Existing Documents</div>
+  <div class="check-grid" id="docs-grid">
+    <div class="check-item" data-key="rlt" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Revocable living trust<span class="check-sub">Primary trust document</span></div>
+    </div>
+    <div class="check-item" data-key="pow" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Pour-over will<span class="check-sub">Companion to RLT</span></div>
+    </div>
+    <div class="check-item" data-key="will" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Last will &amp; testament<span class="check-sub">Standalone — no trust</span></div>
+    </div>
+    <div class="check-item" data-key="dpoa" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Durable POA<span class="check-sub">Financial / general</span></div>
+    </div>
+    <div class="check-item" data-key="hcs" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Healthcare surrogate<span class="check-sub">Medical decisions</span></div>
+    </div>
+    <div class="check-item" data-key="lw" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Living will / directive<span class="check-sub">End-of-life wishes</span></div>
+    </div>
+    <div class="check-item" data-key="hipaa" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">HIPAA authorization<span class="check-sub">Medical records release</span></div>
+    </div>
+    <div class="check-item" data-key="deed" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Deed into trust<span class="check-sub">Real property funded</span></div>
+    </div>
+    <div class="check-item" data-key="accounts" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Financial accounts funded<span class="check-sub">Retitled or POD/TOD</span></div>
+    </div>
+    <div class="check-item" data-key="benerev" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Beneficiary designations<span class="check-sub">IRAs, 401Ks, life ins.</span></div>
+    </div>
+    <div class="check-item" data-key="biz" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Business succession docs<span class="check-sub">Buy-sell, op. agreement</span></div>
+    </div>
+    <div class="check-item" data-key="prenup" onclick="toggle(this)">
+      <div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="check-label">Pre / post-nuptial agreement<span class="check-sub">If applicable</span></div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top: 8px;">Plan Currency</div>
+  <div class="field"><label>Most recent document date or review</label></div>
+  <div class="pill-row" id="recency-pills">
+    <div class="pill" onclick="selPill(this,'recency')">Within 2 years</div>
+    <div class="pill" onclick="selPill(this,'recency')">2–5 years ago</div>
+    <div class="pill" onclick="selPill(this,'recency')">5–10 years ago</div>
+    <div class="pill" onclick="selPill(this,'recency')">10+ years ago</div>
+    <div class="pill" onclick="selPill(this,'recency')">Never reviewed</div>
+    <div class="pill" onclick="selPill(this,'recency')">No documents</div>
+  </div>
+
+  <div class="section-title" style="margin-top: 4px;">Triggering Life Events</div>
+  <div class="check-grid" id="triggers-grid">
+    <div class="check-item" onclick="toggle(this)"><div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-label">Marriage or divorce</div></div>
+    <div class="check-item" onclick="toggle(this)"><div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-label">Death of spouse, beneficiary, or fiduciary</div></div>
+    <div class="check-item" onclick="toggle(this)"><div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-label">New child or grandchild</div></div>
+    <div class="check-item" onclick="toggle(this)"><div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-label">Significant asset change</div></div>
+    <div class="check-item" onclick="toggle(this)"><div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-label">Business formation, sale, or succession</div></div>
+    <div class="check-item" onclick="toggle(this)"><div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-label">Florida homestead acquisition</div></div>
+    <div class="check-item" onclick="toggle(this)"><div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-label">Moved to Florida from another state</div></div>
+    <div class="check-item" onclick="toggle(this)"><div class="check-box"><svg class="check-tick" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-label">Health diagnosis (client or dependent)</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ FIDUCIARIES -->
+<div id="tab-fiduciaries" class="tab-content">
+
+  <div class="section-title">Power of Attorney</div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">1st</span> Primary Agent</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="poa1-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="poa1-rel" placeholder="e.g. Spouse, child"></div>
+    </div>
+    <div class="field"><label>Notes</label><input type="text" id="poa1-notes" placeholder="Any limitations or conditions"></div>
+  </div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">2nd</span> Successor Agent</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="poa2-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="poa2-rel" placeholder="Relationship"></div>
+    </div>
+    <div class="field"><label>Notes</label><input type="text" id="poa2-notes" placeholder=""></div>
+  </div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">3rd</span> Third Successor</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="poa3-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="poa3-rel" placeholder="Relationship"></div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="section-title">Healthcare Surrogate</div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">1st</span> Primary Surrogate</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="hcs1-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="hcs1-rel" placeholder="Relationship"></div>
+    </div>
+    <div class="field"><label>Notes</label><input type="text" id="hcs1-notes" placeholder="Any specific instructions"></div>
+  </div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">2nd</span> Successor Surrogate</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="hcs2-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="hcs2-rel" placeholder="Relationship"></div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="section-title">Personal Representative (Probate)</div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">1st</span> Personal Representative</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="pr1-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="pr1-rel" placeholder="Relationship"></div>
+    </div>
+  </div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">2nd</span> Successor PR</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="pr2-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="pr2-rel" placeholder="Relationship"></div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="section-title">Trustee(s)</div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title">Initial Trustee(s)</div>
+    <div class="field"><label>Trustee(s) — during grantor's lifetime</label>
+      <textarea id="trustee-initial" placeholder="e.g. Client 1 and Client 2 as co-trustees; or Client 1 as sole trustee"></textarea>
+    </div>
+  </div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">1st</span> Successor Trustee</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="st1-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="st1-rel" placeholder="Relationship"></div>
+    </div>
+    <div class="field"><label>Notes</label><input type="text" id="st1-notes" placeholder="Co-trustees? Any conditions?"></div>
+  </div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">2nd</span> Successor Trustee</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="st2-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="st2-rel" placeholder="Relationship"></div>
+    </div>
+  </div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">3rd</span> Successor Trustee</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="st3-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="st3-rel" placeholder="Relationship"></div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="section-title">Guardian of Minor Children</div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">1st</span> Primary Guardian</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="guard1-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="guard1-rel" placeholder="Relationship"></div>
+    </div>
+    <div class="field"><label>Children covered</label><input type="text" id="guard1-kids" placeholder="Names of minors this applies to"></div>
+  </div>
+  <div class="fiduciary-block">
+    <div class="fiduciary-title"><span class="rank-badge">2nd</span> Backup Guardian</div>
+    <div class="row-2">
+      <div class="field"><label>Full name</label><input type="text" id="guard2-name" placeholder="Name"></div>
+      <div class="field"><label>Relationship</label><input type="text" id="guard2-rel" placeholder="Relationship"></div>
+    </div>
+  </div>
+  <div class="field"><label>Guardian notes / conditions</label>
+    <textarea id="guard-notes" placeholder="e.g. Must reside in same school district; specific religious upbringing wishes, etc."></textarea>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ DISTRIBUTION -->
+<div id="tab-distribution" class="tab-content">
+
+  <div class="section-title">Asset Distribution — Post Death of Grantor</div>
+
+  <div class="dist-block">
+    <div class="dist-title">Primary Distribution — To Surviving Spouse / Partner</div>
+    <div class="field"><label>Distribution scheme</label>
+      <div class="pill-row" id="spouse-pills">
+        <div class="pill" onclick="selPill(this,'spouse')">Outright to spouse</div>
+        <div class="pill" onclick="selPill(this,'spouse')">QTIP / marital trust</div>
+        <div class="pill" onclick="selPill(this,'spouse')">Credit shelter + marital</div>
+        <div class="pill" onclick="selPill(this,'spouse')">No surviving spouse</div>
+      </div>
+    </div>
+    <div class="field"><label>Notes</label><textarea id="dist-spouse-notes" placeholder="e.g. All assets outright to spouse; or held in marital trust with income to spouse for life"></textarea></div>
+  </div>
+
+  <div class="dist-block">
+    <div class="dist-title">Distribution to Children / Descendants</div>
+    <div class="field"><label>Distribution scheme</label>
+      <div class="pill-row" id="kids-pills">
+        <div class="pill" onclick="selPill(this,'kids')">Equal shares outright</div>
+        <div class="pill" onclick="selPill(this,'kids')">Equal shares in trust</div>
+        <div class="pill" onclick="selPill(this,'kids')">Per stirpes</div>
+        <div class="pill" onclick="selPill(this,'kids')">Unequal shares</div>
+        <div class="pill" onclick="selPill(this,'kids')">SNT for one child</div>
+      </div>
+    </div>
+    <div class="field"><label>Age(s) / conditions for distribution</label>
+      <input type="text" id="dist-kids-age" placeholder="e.g. 1/3 at 25, 1/3 at 30, remainder at 35">
+    </div>
+    <div class="field"><label>Notes</label><textarea id="dist-kids-notes" placeholder="e.g. If a child predeceases, their share to their children per stirpes; blended family carve-outs, etc."></textarea></div>
+  </div>
+
+  <div class="dist-block">
+    <div class="dist-title">Residuary / Contingent Beneficiaries</div>
+    <div class="field"><label>If all primary beneficiaries predecease</label>
+      <textarea id="dist-residuary" placeholder="e.g. To client's siblings in equal shares; to a named charity; to alma mater"></textarea>
+    </div>
+  </div>
+
+  <div class="dist-block">
+    <div class="dist-title">Specific Bequests</div>
+    <div id="bequests-list"></div>
+    <div class="add-link" onclick="addBequest()">＋ Add specific bequest</div>
+  </div>
+
+  <div class="dist-block">
+    <div class="dist-title">Business Assets</div>
+    <div class="field"><label>Business entity / interest</label>
+      <input type="text" id="biz-entity" placeholder="e.g. Lacey Holdings LLC — 100% membership interest">
+    </div>
+    <div class="field"><label>Succession / disposition plan</label>
+      <textarea id="biz-plan" placeholder="e.g. Transfer to successor trustee; buy-sell with partner; sale on death; retain in family trust"></textarea>
+    </div>
+    <div class="field"><label>Key person / buy-sell agreement in place?</label>
+      <div class="pill-row" id="buysell-pills">
+        <div class="pill" onclick="selPill(this,'buysell')">Yes — existing agreement</div>
+        <div class="pill" onclick="selPill(this,'buysell')">No — needs drafting</div>
+        <div class="pill" onclick="selPill(this,'buysell')">N/A — sole owner</div>
+      </div>
+    </div>
+    <div class="field"><label>Business notes</label>
+      <textarea id="biz-notes" placeholder="Operating agreement language; TBE treatment; charging order protections; valuation issues"></textarea>
+    </div>
+  </div>
+
+  <div class="dist-block">
+    <div class="dist-title">Tangible Personal Property</div>
+    <div class="field"><label>Disposition of personal property</label>
+      <textarea id="dist-tpp" placeholder="e.g. Per written memorandum; jewelry to daughter; art collection appraised and divided equally"></textarea>
+    </div>
+  </div>
+
+  <div class="dist-block">
+    <div class="dist-title">Charitable Intentions</div>
+    <div class="field"><label>Charitable gifts or organizations</label>
+      <textarea id="dist-charity" placeholder="e.g. $25,000 to XYZ Foundation; remainder of IRA to church; DAF to be established"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ GOALS -->
+<div id="tab-goals" class="tab-content">
+  <div class="section-title">Planning Goals — Click to Rank</div>
+  <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Tap each goal to cycle: unselected → Priority 1 → Priority 2 → Priority 3 → unselected</p>
+  <div class="goal-grid" id="goals-grid">
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Avoid probate</span><span class="pri-badge"></span></div><div class="goal-desc">Transfer assets privately without court</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Protect surviving spouse</span><span class="pri-badge"></span></div><div class="goal-desc">Ensure income and asset access for life</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Provide for minor / dependent children</span><span class="pri-badge"></span></div><div class="goal-desc">Guardian, timing of distributions</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Minimize estate / gift tax</span><span class="pri-badge"></span></div><div class="goal-desc">GRATs, IDGTs, CRTs, exemption planning</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Asset protection</span><span class="pri-badge"></span></div><div class="goal-desc">Shield from creditors and litigation</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Blended family planning</span><span class="pri-badge"></span></div><div class="goal-desc">Balance prior children and current spouse</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Special needs planning</span><span class="pri-badge"></span></div><div class="goal-desc">Protect government benefit eligibility</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Charitable giving</span><span class="pri-badge"></span></div><div class="goal-desc">Legacy gifts, CRT, or DAF strategies</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Business succession</span><span class="pri-badge"></span></div><div class="goal-desc">Transfer or sell with minimal disruption</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Incapacity planning</span><span class="pri-badge"></span></div><div class="goal-desc">Authorized agent if client incapacitated</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Multigenerational transfer</span><span class="pri-badge"></span></div><div class="goal-desc">Dynasty trust or GST planning</div></div>
+    <div class="goal-card" onclick="cycleGoal(this)"><div class="goal-top"><span class="goal-name">Medicaid / LTC planning</span><span class="pri-badge"></span></div><div class="goal-desc">MAPT or hybrid DAPT; 5-year lookback</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ NOTES -->
+<div id="tab-notes" class="tab-content">
+  <div class="section-title">Attorney Notes</div>
+
+  <div class="field"><label>Recommended services / plan outline</label>
+    <textarea id="note-recs" style="min-height: 100px;" placeholder="e.g. Full trust package: RLT, pour-over will, DPOA, HCS, living will, HIPAA. Deed homestead into trust. Review IRA beneficiary designations with advisor."></textarea>
+  </div>
+  <div class="field"><label>Concerns or complexities noted</label>
+    <textarea id="note-concerns" style="min-height: 80px;" placeholder="e.g. Out-of-state property may require ancillary probate. Business interest needs operating agreement review. Blended family — QTIP trust recommended."></textarea>
+  </div>
+  <div class="field"><label>Tax planning considerations</label>
+    <textarea id="note-tax" style="min-height: 80px;" placeholder="e.g. Estate value approaching federal exemption — monitor. Step-up in basis analysis for real property. §199A QBI review."></textarea>
+  </div>
+  <div class="field"><label>Proposed fee / engagement terms</label>
+    <textarea id="note-fee" style="min-height: 60px;" placeholder="e.g. Trust-based package: $4,500. Includes drafting, execution, and funding assistance for homestead. Engagement letter to follow."></textarea>
+  </div>
+  <div class="field"><label>Follow-up items / action list</label>
+    <textarea id="note-followup" style="min-height: 80px;" placeholder="e.g. Client to provide: copy of deed, account statements, business operating agreement. Attorney to send engagement letter within 48 hours."></textarea>
+  </div>
+  <div class="field"><label>Next steps / scheduled follow-up</label>
+    <input type="text" id="note-nextsteps" placeholder="e.g. Signing appointment in 3 weeks — paralegal to calendar">
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SUMMARY -->
+<div id="tab-summary" class="tab-content">
+  <div class="section-title">Audit Scorecard</div>
+  <div class="score-grid">
+    <div class="score-card"><div class="score-num" id="sc-docs">0</div><div class="score-lbl">Documents in place</div></div>
+    <div class="score-card"><div class="score-num" id="sc-goals">0</div><div class="score-lbl">Goals identified</div></div>
+    <div class="score-card"><div class="score-num" id="sc-triggers">0</div><div class="score-lbl">Triggering events</div></div>
+    <div class="score-card"><div class="score-num" id="sc-gaps" style="color: var(--red-mid);">–</div><div class="score-lbl">Gaps flagged</div></div>
+  </div>
+  <div class="gap-list" id="gap-list"></div>
+
+  <hr>
+  <div class="section-title" style="margin-top: 0;">AI Consultation Summary</div>
+  <button class="btn btn-primary" id="gen-btn" onclick="generateSummary()">
+    <span class="btn-text">Generate consultation summary</span>
+    <div class="spinner"></div>
+  </button>
+  <div class="ai-box" id="ai-box">
+    <div class="ai-label">Draft memo — for client file</div>
+    <div class="ai-placeholder" id="ai-placeholder">Tap "Generate" to create a consultation summary memo based on your audit notes.</div>
+    <div class="ai-content" id="ai-content" style="display:none;"></div>
+  </div>
+
+  <hr>
+  <div class="section-title" style="margin-top: 0;">Send to Paralegals</div>
+  <button class="btn btn-gold" onclick="openEmailModal()">Email notes to kbrown &amp; myesis</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ EMAIL MODAL -->
+<div class="modal-overlay" id="email-modal">
+  <div class="modal">
+    <div class="modal-close-row">
+      <div>
+        <div class="modal-title">Send to Paralegals</div>
+        <div class="modal-sub">kbrown@llr.law · myesis@llr.law</div>
+      </div>
+      <button class="modal-x" onclick="closeEmailModal()">×</button>
+    </div>
+    <div class="field"><label>Subject</label><input type="text" id="email-subject" placeholder="Estate Plan Audit — [Client Name]"></div>
+    <div class="field"><label>Additional message (optional)</label><textarea id="email-body-extra" placeholder="Any instructions for paralegals..."></textarea></div>
+    <button class="btn btn-primary" onclick="sendEmail()">Open in Mail app</button>
+    <button class="btn btn-outline" onclick="closeEmailModal()">Cancel</button>
+  </div>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────
+const goalStates = {};
+let bequestCount = 0;
+
+// ─── TABS ─────────────────────────────────────────────────
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'summary') updateScore();
+}
+
+// ─── CHECKBOXES ───────────────────────────────────────────
+function toggle(el) {
+  el.classList.toggle('checked');
+}
+
+// ─── PILLS ────────────────────────────────────────────────
+function selPill(el, group) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+  el.classList.toggle('selected');
+}
+
+// ─── GOAL CYCLE ───────────────────────────────────────────
+function cycleGoal(el) {
+  const id = el.querySelector('.goal-name').textContent;
+  const cur = goalStates[id] || 0;
+  const next = (cur + 1) % 4;
+  goalStates[id] = next;
+  el.classList.remove('p1','p2','p3');
+  const badge = el.querySelector('.pri-badge');
+  if (next === 1) { el.classList.add('p1'); badge.textContent = 'P1'; }
+  else if (next === 2) { el.classList.add('p2'); badge.textContent = 'P2'; }
+  else if (next === 3) { el.classList.add('p3'); badge.textContent = 'P3'; }
+  else badge.textContent = '';
+}
+
+// ─── BEQUESTS ─────────────────────────────────────────────
+function addBequest() {
+  bequestCount++;
+  const id = 'beq-' + bequestCount;
+  const div = document.createElement('div');
+  div.className = 'row-2';
+  div.id = id;
+  div.style.marginBottom = '8px';
+  div.innerHTML = `
+    <div class="field" style="margin-bottom:0"><label>Beneficiary</label><input type="text" id="${id}-who" placeholder="Name / organization"></div>
+    <div class="field" style="margin-bottom:0;display:flex;align-items:flex-end;gap:6px">
+      <div style="flex:1"><label>Bequest / item</label><input type="text" id="${id}-what" placeholder="Amount, asset, or description"></div>
+      <button class="rm-btn" onclick="document.getElementById('${id}').remove()">−</button>
+    </div>`;
+  document.getElementById('bequests-list').appendChild(div);
+}
+
+// ─── SCORE + GAPS ─────────────────────────────────────────
+function updateScore() {
+  const docs = document.querySelectorAll('#docs-grid .check-item.checked').length;
+  const triggers = document.querySelectorAll('#triggers-grid .check-item.checked').length;
+  const goals = Object.values(goalStates).filter(v => v > 0).length;
+  document.getElementById('sc-docs').textContent = docs;
+  document.getElementById('sc-goals').textContent = goals;
+  document.getElementById('sc-triggers').textContent = triggers;
+  buildGaps(docs, triggers, goals);
+}
+
+function ck(key) {
+  const el = document.querySelector(`#docs-grid .check-item[data-key="${key}"]`);
+  return el && el.classList.contains('checked');
+}
+
+function buildGaps(docs, triggers, goals) {
+  const flags = [];
+  const recency = document.querySelector('#recency-pills .pill.selected');
+  const rec = recency ? recency.textContent : '';
+
+  if (!ck('rlt')) flags.push({ t:'danger', txt:'No revocable living trust — estate will pass through probate without one.' });
+  if (!ck('dpoa')) flags.push({ t:'danger', txt:'No durable POA — no one authorized to manage finances during incapacity.' });
+  if (!ck('hcs')) flags.push({ t:'warn', txt:'No healthcare surrogate — medical decision authority is unclear.' });
+  if (!ck('lw')) flags.push({ t:'warn', txt:'No living will / advance directive — end-of-life wishes are undocumented.' });
+  if (ck('rlt') && !ck('deed')) flags.push({ t:'danger', txt:'Trust exists but homestead not deeded in — still subject to probate.' });
+  if (!ck('benerev')) flags.push({ t:'warn', txt:'Beneficiary designations not confirmed — IRAs and life insurance may override trust plan.' });
+  if (['5–10 years ago','10+ years ago','Never reviewed'].includes(rec)) flags.push({ t:'warn', txt:'Plan is stale — Florida law changes may have outpaced existing documents.' });
+  if (triggers >= 2) flags.push({ t:'warn', txt:`${triggers} triggering life events noted — comprehensive review strongly indicated.` });
+  if (goals === 0) flags.push({ t:'warn', txt:'No planning goals selected — complete the Goals tab.' });
+  if (flags.length === 0 && docs >= 8) flags.push({ t:'ok', txt:'Core documents appear to be in place — review for currency and current goals.' });
+
+  document.getElementById('sc-gaps').textContent = flags.filter(f=>f.t!=='ok').length || '0';
+  document.getElementById('gap-list').innerHTML = flags.map(f =>
+    `<div class="gap-item ${f.t}">${f.txt}</div>`
+  ).join('');
+}
+
+// ─── COLLECT ALL DATA ─────────────────────────────────────
+function collectAll() {
+  const g = id => (document.getElementById(id)||{}).value || '';
+  const docs = Array.from(document.querySelectorAll('#docs-grid .check-item.checked')).map(e=>e.querySelector('.check-label').childNodes[0].textContent.trim());
+  const triggers = Array.from(document.querySelectorAll('#triggers-grid .check-item.checked')).map(e=>e.querySelector('.check-label').textContent.trim());
+  const p1goals = Object.entries(goalStates).filter(([k,v])=>v===1).map(([k])=>k);
+  const p2goals = Object.entries(goalStates).filter(([k,v])=>v===2).map(([k])=>k);
+  const p3goals = Object.entries(goalStates).filter(([k,v])=>v===3).map(([k])=>k);
+  const rec = (document.querySelector('#recency-pills .pill.selected')||{}).textContent || 'Not specified';
+
+  const bequests = [];
+  document.querySelectorAll('[id^="beq-"]').forEach(row => {
+    const n = row.id;
+    const who = (document.getElementById(n+'-who')||{}).value||'';
+    const what = (document.getElementById(n+'-what')||{}).value||'';
+    if (who||what) bequests.push(`${who}: ${what}`);
+  });
+
+  return {
+    client1: g('c-name1'), client2: g('c-name2'), date: g('c-date'),
+    referral: g('c-referral'), estateVal: g('c-estate'), marital: g('c-marital'),
+    address: g('c-address'), dependents: g('c-dependents'), business: g('c-business'),
+    outofstate: g('c-outofstate'),
+    docs, triggers, recency: rec,
+    poa: { p1: g('poa1-name'), p1rel: g('poa1-rel'), p1notes: g('poa1-notes'), p2: g('poa2-name'), p2rel: g('poa2-rel'), p3: g('poa3-name'), p3rel: g('poa3-rel') },
+    hcs: { p1: g('hcs1-name'), p1rel: g('hcs1-rel'), p1notes: g('hcs1-notes'), p2: g('hcs2-name'), p2rel: g('hcs2-rel') },
+    pr: { p1: g('pr1-name'), p1rel: g('pr1-rel'), p2: g('pr2-name'), p2rel: g('pr2-rel') },
+    trustees: { initial: g('trustee-initial'), s1: g('st1-name'), s1rel: g('st1-rel'), s1notes: g('st1-notes'), s2: g('st2-name'), s2rel: g('st2-rel'), s3: g('st3-name'), s3rel: g('st3-rel') },
+    guardians: { p1: g('guard1-name'), p1rel: g('guard1-rel'), kids: g('guard1-kids'), p2: g('guard2-name'), p2rel: g('guard2-rel'), notes: g('guard-notes') },
+    distribution: {
+      spouse: (document.querySelector('#spouse-pills .pill.selected')||{}).textContent||'',
+      spouseNotes: g('dist-spouse-notes'),
+      kids: (document.querySelector('#kids-pills .pill.selected')||{}).textContent||'',
+      kidsAge: g('dist-kids-age'), kidsNotes: g('dist-kids-notes'),
+      residuary: g('dist-residuary'), bequests,
+      bizEntity: g('biz-entity'), bizPlan: g('biz-plan'),
+      buySell: (document.querySelector('#buysell-pills .pill.selected')||{}).textContent||'',
+      bizNotes: g('biz-notes'), tpp: g('dist-tpp'), charity: g('dist-charity')
+    },
+    goals: { p1: p1goals, p2: p2goals, p3: p3goals },
+    notes: { recs: g('note-recs'), concerns: g('note-concerns'), tax: g('note-tax'), fee: g('note-fee'), followup: g('note-followup'), nextsteps: g('note-nextsteps') }
+  };
+}
+
+// ─── BUILD TEXT NOTES ─────────────────────────────────────
+function buildNotesText(d) {
+  const line = (label, val) => val ? `${label}: ${val}\n` : '';
+  const section = (title, content) => content.trim() ? `\n━━━ ${title.toUpperCase()} ━━━\n${content}` : '';
+  let t = `ESTATE PLAN AUDIT — LACEY REZANKA PLLC\n`;
+  t += `${'─'.repeat(44)}\n`;
+  t += line('Client', d.client1 + (d.client2 ? ' & ' + d.client2 : ''));
+  t += line('Date', d.date); t += line('Referred by', d.referral);
+  t += line('Estate value', d.estateVal); t += line('Marital status', d.marital);
+  t += line('Address', d.address); t += line('Dependents', d.dependents);
+  t += line('Business interests', d.business); t += line('Out-of-state property', d.outofstate);
+
+  t += section('Existing Documents', d.docs.length ? d.docs.map(d=>`  ✓ ${d}`).join('\n') : '  None checked');
+  t += `\n  Last review: ${d.recency}`;
+  if (d.triggers.length) t += `\n  Triggering events: ${d.triggers.join('; ')}`;
+
+  let fid = '';
+  if (d.poa.p1) fid += `POA — 1st: ${d.poa.p1} (${d.poa.p1rel})${d.poa.p1notes?' — '+d.poa.p1notes:''}\n`;
+  if (d.poa.p2) fid += `POA — 2nd: ${d.poa.p2} (${d.poa.p2rel})\n`;
+  if (d.poa.p3) fid += `POA — 3rd: ${d.poa.p3} (${d.poa.p3rel})\n`;
+  if (d.hcs.p1) fid += `HCS — 1st: ${d.hcs.p1} (${d.hcs.p1rel})${d.hcs.p1notes?' — '+d.hcs.p1notes:''}\n`;
+  if (d.hcs.p2) fid += `HCS — 2nd: ${d.hcs.p2} (${d.hcs.p2rel})\n`;
+  if (d.pr.p1) fid += `Personal Rep — 1st: ${d.pr.p1} (${d.pr.p1rel})\n`;
+  if (d.pr.p2) fid += `Personal Rep — 2nd: ${d.pr.p2} (${d.pr.p2rel})\n`;
+  if (d.trustees.initial) fid += `Initial Trustee(s): ${d.trustees.initial}\n`;
+  if (d.trustees.s1) fid += `Successor Trustee — 1st: ${d.trustees.s1} (${d.trustees.s1rel})${d.trustees.s1notes?' — '+d.trustees.s1notes:''}\n`;
+  if (d.trustees.s2) fid += `Successor Trustee — 2nd: ${d.trustees.s2} (${d.trustees.s2rel})\n`;
+  if (d.trustees.s3) fid += `Successor Trustee — 3rd: ${d.trustees.s3} (${d.trustees.s3rel})\n`;
+  if (d.guardians.p1) fid += `Guardian — Primary: ${d.guardians.p1} (${d.guardians.p1rel}) for ${d.guardians.kids||'minor children'}\n`;
+  if (d.guardians.p2) fid += `Guardian — Backup: ${d.guardians.p2} (${d.guardians.p2rel})\n`;
+  if (d.guardians.notes) fid += `Guardian notes: ${d.guardians.notes}\n`;
+  t += section('Fiduciaries', fid);
+
+  let dist = '';
+  if (d.distribution.spouse) dist += `Spouse distribution: ${d.distribution.spouse}\n`;
+  if (d.distribution.spouseNotes) dist += `  ${d.distribution.spouseNotes}\n`;
+  if (d.distribution.kids) dist += `Children distribution: ${d.distribution.kids}\n`;
+  if (d.distribution.kidsAge) dist += `  Age/conditions: ${d.distribution.kidsAge}\n`;
+  if (d.distribution.kidsNotes) dist += `  ${d.distribution.kidsNotes}\n`;
+  if (d.distribution.residuary) dist += `Residuary: ${d.distribution.residuary}\n`;
+  if (d.distribution.bequests.length) dist += `Specific bequests:\n${d.distribution.bequests.map(b=>'  • '+b).join('\n')}\n`;
+  if (d.distribution.bizEntity) dist += `Business: ${d.distribution.bizEntity}\n`;
+  if (d.distribution.bizPlan) dist += `  Succession: ${d.distribution.bizPlan}\n`;
+  if (d.distribution.buySell) dist += `  Buy-sell: ${d.distribution.buySell}\n`;
+  if (d.distribution.bizNotes) dist += `  Notes: ${d.distribution.bizNotes}\n`;
+  if (d.distribution.tpp) dist += `Personal property: ${d.distribution.tpp}\n`;
+  if (d.distribution.charity) dist += `Charitable: ${d.distribution.charity}\n`;
+  t += section('Distribution', dist);
+
+  let g = '';
+  if (d.goals.p1.length) g += `Priority 1: ${d.goals.p1.join(', ')}\n`;
+  if (d.goals.p2.length) g += `Priority 2: ${d.goals.p2.join(', ')}\n`;
+  if (d.goals.p3.length) g += `Priority 3: ${d.goals.p3.join(', ')}\n`;
+  t += section('Planning Goals', g);
+
+  let n = '';
+  if (d.notes.recs) n += `Recommended services:\n${d.notes.recs}\n\n`;
+  if (d.notes.concerns) n += `Concerns / complexities:\n${d.notes.concerns}\n\n`;
+  if (d.notes.tax) n += `Tax considerations:\n${d.notes.tax}\n\n`;
+  if (d.notes.fee) n += `Fee / engagement:\n${d.notes.fee}\n\n`;
+  if (d.notes.followup) n += `Follow-up items:\n${d.notes.followup}\n\n`;
+  if (d.notes.nextsteps) n += `Next steps: ${d.notes.nextsteps}\n`;
+  t += section('Attorney Notes', n);
+  t += '\n\n— Lacey Rezanka PLLC · llr.law · Confidential Attorney Work Product —\n';
+  return t;
+}
+
+// ─── GENERATE AI SUMMARY ─────────────────────────────────
+async function generateSummary() {
+  const btn = document.getElementById('gen-btn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+  document.getElementById('ai-placeholder').style.display = 'none';
+  document.getElementById('ai-content').style.display = 'none';
+  document.getElementById('ai-box').classList.add('loading');
+
+  const d = collectAll();
+  const notes = buildNotesText(d);
+
+  const prompt = `You are an estate planning attorney at Lacey Rezanka PLLC, a boutique HNW estate planning firm in Brevard County, Florida. Based on the following consultation audit notes, draft a concise attorney memorandum suitable for the client file. The memo should: (1) summarize who the client is and what they came in for, (2) note what documents currently exist and any gaps, (3) summarize the fiduciaries selected, (4) summarize the distribution plan, (5) list the top planning goals, and (6) state the recommended services and proposed fee. Write in professional but plain English. Address the memo "Re: [Client Name] — Estate Plan Consultation." Do not use bullet points in the memo body; use short paragraphs. Keep it under 400 words.\n\nAUDIT NOTES:\n${notes}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content && data.content[0] && data.content[0].text ? data.content[0].text : 'Error generating summary — please check your connection.';
+    document.getElementById('ai-content').textContent = text;
+    document.getElementById('ai-content').style.display = 'block';
+  } catch(e) {
+    document.getElementById('ai-content').textContent = 'Could not connect to AI — please check your internet connection and try again.';
+    document.getElementById('ai-content').style.display = 'block';
+  }
+
+  document.getElementById('ai-box').classList.remove('loading');
+  btn.classList.remove('loading');
+  btn.disabled = false;
+}
+
+// ─── EMAIL ────────────────────────────────────────────────
+function openEmailModal() {
+  const name = document.getElementById('c-name1').value || 'Client';
+  document.getElementById('email-subject').value = `Estate Plan Audit — ${name}`;
+  document.getElementById('email-modal').classList.add('open');
+}
+function closeEmailModal() {
+  document.getElementById('email-modal').classList.remove('open');
+}
+function sendEmail() {
+  const d = collectAll();
+  const notes = buildNotesText(d);
+  const aiText = document.getElementById('ai-content').style.display !== 'none'
+    ? '\n\n━━━ AI CONSULTATION MEMO ━━━\n' + document.getElementById('ai-content').textContent : '';
+  const extra = document.getElementById('email-body-extra').value;
+  const subject = document.getElementById('email-subject').value;
+  const body = (extra ? extra + '\n\n' : '') + notes + aiText;
+  const mailto = `mailto:kbrown@llr.law,myesis@llr.law?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+  closeEmailModal();
+}
+
+// ─── CLEAR ────────────────────────────────────────────────
+function clearAll() {
+  if (!confirm('Clear all fields and start over?')) return;
+  document.querySelectorAll('.check-item').forEach(e=>e.classList.remove('checked'));
+  document.querySelectorAll('.pill').forEach(e=>e.classList.remove('selected'));
+  document.querySelectorAll('.goal-card').forEach(e=>{
+    e.classList.remove('p1','p2','p3');
+    e.querySelector('.pri-badge').textContent='';
+  });
+  Object.keys(goalStates).forEach(k=>delete goalStates[k]);
+  document.querySelectorAll('input[type="text"],input[type="date"],input[type="email"],textarea').forEach(e=>e.value='');
+  document.querySelectorAll('select').forEach(e=>e.selectedIndex=0);
+  document.getElementById('bequests-list').innerHTML='';
+  document.getElementById('ai-content').textContent='';
+  document.getElementById('ai-content').style.display='none';
+  document.getElementById('ai-placeholder').style.display='block';
+  bequestCount=0;
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+// Set today's date
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('c-date').value = today;
+</script>
+</body>
+</html>
